@@ -3,7 +3,11 @@
 
 A production-ready, scalable video sharing platform built with **Next.js 15**. Re-engineered for performance, user experience, and developer productivity.
 
-## 🚀 Tech Stack
+## Sample Website
+
+https://extreme-v2.vercel.app/
+
+## Tech Stack
 
 -   **Frontend**: [Next.js 15](https://nextjs.org) (App Router, Server Components), [TypeScript](https://www.typescriptlang.org), [Tailwind CSS](https://tailwindcss.com).
 -   **UI Library**: [Shadcn/UI](https://ui.shadcn.com) (Radix Primitives).
@@ -14,7 +18,7 @@ A production-ready, scalable video sharing platform built with **Next.js 15**. R
 -   **State Management**: React Query (Server state), Zustand (Client state).
 -   **Testing**: Jest (Unit), Playwright (E2E).
 
-## ✨ Features
+## Features
 
 -   **Video Management**:
     -   Drag & Drop Uploads directly to Cloudinary.
@@ -105,7 +109,7 @@ Runs comprehensive browser automation tests for critical flows (Navigation, Sear
 npx playwright test
 ```
 
-## 📂 Project Structure
+## Project Structure
 
 -   `src/app`: Next.js App Router pages and layouts.
 -   `src/components`: Reusable UI components.
@@ -115,7 +119,7 @@ npx playwright test
 -   `e2e`: Playwright test specifications.
 -   `__tests__`: Jest unit tests.
 
-## 🚀 Deployment
+## Deployment
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
 
