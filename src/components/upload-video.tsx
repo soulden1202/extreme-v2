@@ -19,8 +19,21 @@ export default function UploadVideo({ onUploadSuccess }: UploadVideoProps) {
       }}
       // @ts-ignore - The types for next-cloudinary are sometimes loose
       onSuccess={(result) => {
-        if (result.info && typeof result.info === "object" && "secure_url" in result.info) {
-            onUploadSuccess(result.info.secure_url as string);
+        if (result.info && typeof result.info === "object") {
+            const info = result.info as any;
+            
+            // Check for moderation flags (if synchronous moderation is enabled)
+            if (info.moderation && info.moderation.length > 0) {
+                const status = info.moderation[0].status;
+                if (status === "rejected") {
+                    alert("Upload failed: Content rejected by moderation.");
+                    return;
+                }
+            }
+
+            if ("secure_url" in info) {
+                onUploadSuccess(info.secure_url as string);
+            }
         }
       }}
     >
