@@ -1,6 +1,7 @@
+
 "use client"
 
-import { Home, TrendingUp, Upload, User, Video, LogOut, LayoutDashboard, ListMusic } from "lucide-react"
+import { Home, TrendingUp, Upload, User, Video, LayoutDashboard, History } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -20,7 +21,8 @@ import { UserButton } from "@clerk/nextjs"
 import { NotificationBell } from "@/components/notification-bell"
 
 import { SidebarPlaylists } from "@/components/sidebar-playlists"
-
+import { getMyProfileId } from "@/actions/user"
+import { useEffect, useState } from "react"
 // Menu items.
 const discoveryItems = [
   {
@@ -32,6 +34,11 @@ const discoveryItems = [
     title: "Trending",
     url: "/trending",
     icon: TrendingUp,
+  },
+  {
+    title: "History",
+    url: "/history",
+    icon: History,
   },
 ]
 
@@ -53,11 +60,7 @@ const userItems = [
   },
 ]
 
-
-import { getMyProfileId } from "@/actions/user"
-import { useEffect, useState } from "react"
-
-export function AppSidebar() {
+export function AppSidebar({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname()
   const [profileId, setProfileId] = useState<string | null>(null)
 
@@ -131,6 +134,10 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        
+        {/* Injected Content (e.g. Subscriptions) */}
+        {children}
+
       </SidebarContent>
       <SidebarFooter className="p-4 border-t border-sidebar-border">
           <div className="flex items-center gap-2">
@@ -143,4 +150,3 @@ export function AppSidebar() {
     </Sidebar>
   )
 }
-

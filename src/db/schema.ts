@@ -1,4 +1,24 @@
-import { pgTable, text, uuid, timestamp, integer, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, timestamp, integer, boolean, primaryKey } from "drizzle-orm/pg-core";
+
+// ... existing code ...
+
+export const subscriptions = pgTable("subscriptions", {
+    followerId: uuid("follower_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+    followingId: uuid("following_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (t) => [
+    primaryKey({ columns: [t.followerId, t.followingId] }),
+]);
+
+// ... relations ...
+
+export const watchHistory = pgTable("watch_history", {
+    userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+    videoId: uuid("video_id").references(() => videos.id, { onDelete: "cascade" }).notNull(),
+    watchedAt: timestamp("watched_at").defaultNow().notNull(),
+}, (t) => [
+    primaryKey({ columns: [t.userId, t.videoId] }),
+]);
 import { relations } from "drizzle-orm";
 
 export const users = pgTable("users", {
@@ -84,6 +104,9 @@ export const usersRelations = relations(users, ({ many }) => ({
   commentLikes: many(commentLikes),
   playlists: many(playlists),
   notifications: many(notifications),
+  following: many(subscriptions, { relationName: "following" }),
+  followers: many(subscriptions, { relationName: "followers" }),
+  watchHistory: many(watchHistory),
 }));
 
 export const videosRelations = relations(videos, ({ one, many }) => ({
@@ -138,7 +161,7 @@ export const commentLikesRelations = relations(commentLikes, ({ one }) => ({
 }));
 
 export const notificationsRelations = relations(notifications, ({ one }) => ({
-  recipient: one(users, {
+   recipient: one(users, {
     fields: [notifications.recipientId],
     references: [users.id],
     relationName: "recipient",
@@ -148,4 +171,26 @@ export const notificationsRelations = relations(notifications, ({ one }) => ({
     references: [users.id],
     relationName: "actor",
   }),
+}));
+
+
+
+export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
+    follower: one(users, {
+        fields: [subscriptions.followerId],
+        references: [users.id],
+        relationName: "following", // Users I am following
+    }),
+    following: one(users, {
+        fields: [subscriptions.followingId],
+        references: [users.id],
+        relationName: "followers", // Users following me
+    }),
+}));
+
+
+
+export const watchHistoryRelations = relations(watchHistory, ({ one }) => ({
+    user: one(users, { fields: [watchHistory.userId], references: [users.id] }),
+    video: one(videos, { fields: [watchHistory.videoId], references: [videos.id] }),
 }));

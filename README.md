@@ -29,18 +29,21 @@ https://extreme-v2.vercel.app/
     -   **Search**: Full-text search for videos and users.
     -   **Infinite Scroll**: Performant feed with virtualization.
 -   **Social Interactions**:
+    -   **Subscriptions**: Follow creators and see their latest videos in your **Subscriptions Feed**.
     -   **Comments**: Nested replies and **@mentions** support.
     -   **Likes**: Optimistic UI updates for instant feedback.
-    -   **Notifications**: Real-time alerts for mentions, likes, and follows.
--   **Playlists**:
-    -   Create and manage custom playlists.
+    -   **Notifications**: Real-time alerts for mentions, likes, and new followers.
+-   **Playlists & History**:
+    -   **Watch History**: AUTOMATICALLY logs your views. Resumable playback (future). Auto-prunes history older than 30 days.
+    -   **Playlists**: Create and manage custom playlists.
     -   **"Liked Videos"**: Auto-generated playlist of your liked content.
 -   **UI/UX**:
+    -   **Modern Polish**: Animated interactions (e.g., Sign-in button, Like button).
     -   Dark/Light mode.
     -   Skeleton loaders and empty states.
     -   Responsive sidebar with collapsible menus.
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -95,10 +98,10 @@ https://extreme-v2.vercel.app/
     ```
     Open [http://localhost:3000](http://localhost:3000).
 
-## 🧪 Testing
+## Testing
 
 ### Unit Tests (Jest)
-Runs tests for utility functions and isolated components.
+Runs tests for utility functions and isolated components (e.g., `SubscribeButton`).
 ```bash
 npm test
 ```
@@ -133,6 +136,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
     -   *Note: Ensure `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and all Cloudinary keys are set.*
 4.  **Deploy**: Click "Deploy". Vercel will automatically build and deploy your site on every push to the `main` branch.
 
-## 📄 License
+## License
 
 MIT

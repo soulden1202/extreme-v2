@@ -16,6 +16,9 @@ import { PlaylistDialog } from "@/components/playlist-dialog";
 import { currentUser } from "@clerk/nextjs/server";
 import { LikeButton } from "@/components/like-button";
 import { CommentSection } from "@/components/comment-section";
+import { SubscribeButton } from "@/components/subscribe-button";
+import { WatchHistoryLogger } from "@/components/watch-history-logger";
+import { getSubscriberCount } from "@/actions/subscriptions";
 
 interface WatchPageProps {
   params: {
@@ -39,6 +42,8 @@ export default async function WatchPage({ params }: WatchPageProps) {
   if (!video) {
     notFound();
   }
+
+  const subscriberCount = await getSubscriberCount(video.userId);
 
   // 2. Determine "Up Next"
   const recommendedVideos = await db.query.videos.findMany({
@@ -66,6 +71,30 @@ export default async function WatchPage({ params }: WatchPageProps) {
             )
         });
         isLiked = !!userLike;
+    }
+  }
+
+  // 4. Check Subscription Status
+  let isSubscribed = false;
+  let isOwner = false;
+  
+  if (user) {
+    const dbUser = await db.query.users.findFirst({
+        where: eq(users.clerkId, user.id),
+    });
+
+    if (dbUser) {
+        if (dbUser.id === video.userId) {
+            isOwner = true;
+        } else {
+            const subscription = await db.query.subscriptions.findFirst({
+                where: (subscriptions, { and, eq }) => and(
+                    eq(subscriptions.followerId, dbUser.id),
+                    eq(subscriptions.followingId, video.userId)
+                )
+            });
+            isSubscribed = !!subscription;
+        }
     }
   }
 
@@ -109,8 +138,14 @@ export default async function WatchPage({ params }: WatchPageProps) {
                     </Avatar>
                     <div>
                         <h3 className="font-semibold text-lg">{video.user.name}</h3>
-                        <p className="text-sm text-muted-foreground">{video.views} views • 0 followers</p>
+                        <p className="text-sm text-muted-foreground">{subscriberCount} subscribers</p>
                     </div>
+                    
+                    <SubscribeButton 
+                        targetUserId={video.user.id} 
+                        initialIsSubscribed={isSubscribed} 
+                        isOwner={isOwner} 
+                    />
                 </div>
                 
                 <div className="flex gap-2">
@@ -159,6 +194,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
             )}
         </div>
       </div>
+      <WatchHistoryLogger videoId={video.id} />
     </div>
   );
 }

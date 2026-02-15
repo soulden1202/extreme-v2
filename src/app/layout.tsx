@@ -6,9 +6,12 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { SidebarSubscriptions } from "@/components/sidebar-subscriptions";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "@/components/mode-toggle";
 import { SearchInput } from "@/components/search-input";
+import { Toaster } from "@/components/ui/toaster";
+import { AnimatedSignInButton } from "@/components/animated-signin-button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,9 +46,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10 transition-all">
+              <AppSidebar>
+                 <SidebarSubscriptions />
+              </AppSidebar>
+              <SidebarInset className="h-screen overflow-hidden">
+                <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10 transition-all">
                   <SidebarTrigger className="-ml-1" />
                   <Separator orientation="vertical" className="mr-2 h-4" />
                   <div className="flex flex-1 items-center justify-between gap-4">
@@ -55,7 +60,7 @@ export default function RootLayout({
                      <div className="flex items-center gap-2">
                         <ModeToggle />
                         <SignedOut>
-                            <SignInButton mode="modal" />
+                            <AnimatedSignInButton />
                         </SignedOut>
                         <SignedIn>
                             <UserButton />
@@ -63,11 +68,12 @@ export default function RootLayout({
                      </div>
                   </div>
                 </header>
-                <main className="flex flex-1 flex-col gap-4 p-4">
+                <div className="flex flex-1 flex-col gap-4 p-4 overflow-y-auto">
                     {children}
-                </main>
+                </div>
               </SidebarInset>
             </SidebarProvider>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
