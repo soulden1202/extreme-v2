@@ -1,11 +1,15 @@
+
 import { db } from "@/db";
-import { users, videos } from "@/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { users, videos, subscriptions } from "@/db/schema";
+import { eq, desc, and } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Video } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
+import { SubscribeButton } from "@/components/subscribe-button";
+import { getSubscriberCount } from "@/actions/subscriptions";
 
 interface ProfilePageProps {
   params: {
@@ -16,6 +20,7 @@ interface ProfilePageProps {
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const { userId } = await params;
 
+  // 1. Fetch User Profile & Videos
   const user = await db.query.users.findFirst({
     where: eq(users.id, userId),
     with: {
@@ -29,6 +34,33 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     notFound();
   }
 
+  const subscriberCount = await getSubscriberCount(user.id);
+
+  // 2. Check Subscription Status
+  const loggedInUser = await currentUser();
+  let isSubscribed = false;
+  let isOwner = false;
+
+  if (loggedInUser) {
+    const dbUser = await db.query.users.findFirst({
+        where: eq(users.clerkId, loggedInUser.id),
+    });
+
+    if (dbUser) {
+        isOwner = dbUser.id === user.id;
+        
+        if (!isOwner) {
+            const subscription = await db.query.subscriptions.findFirst({
+                where: and(
+                    eq(subscriptions.followerId, dbUser.id),
+                    eq(subscriptions.followingId, user.id)
+                )
+            });
+            isSubscribed = !!subscription;
+        }
+    }
+  }
+
   return (
     <div className="container mx-auto p-4 lg:p-8 space-y-8">
       {/* Profile Header */}
@@ -37,12 +69,21 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
             <AvatarImage src={user.imageUrl} />
             <AvatarFallback className="text-4xl">{user.name.substring(0,2).toUpperCase()}</AvatarFallback>
         </Avatar>
-        <div className="text-center md:text-left space-y-2">
-            <h1 className="text-3xl md:text-4xl font-bold">{user.name}</h1>
-            <p className="text-muted-foreground text-lg">
-                {user.videos.length} {user.videos.length === 1 ? 'Video' : 'Videos'}
-            </p>
-            {/* Future: Bio, Social Links, Follow Button */}
+        <div className="text-center md:text-left space-y-2 flex-1">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+                <h1 className="text-3xl md:text-4xl font-bold">{user.name}</h1>
+                 {!isOwner && (
+                    <SubscribeButton 
+                        targetUserId={user.id} 
+                        initialIsSubscribed={isSubscribed} 
+                    />
+                )}
+            </div>
+            <div className="flex items-center gap-4 text-muted-foreground text-lg">
+                <p>{subscriberCount} {subscriberCount === 1 ? 'subscriber' : 'subscribers'}</p>
+                <span>•</span>
+                <p>{user.videos.length} {user.videos.length === 1 ? 'Video' : 'Videos'}</p>
+            </div>
         </div>
       </div>
 

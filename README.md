@@ -3,7 +3,7 @@
 
 A production-ready, scalable video sharing platform built with **Next.js 15**. Re-engineered for performance, user experience, and developer productivity.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 -   **Frontend**: [Next.js 15](https://nextjs.org) (App Router, Server Components), [TypeScript](https://www.typescriptlang.org), [Tailwind CSS](https://tailwindcss.com).
 -   **UI Library**: [Shadcn/UI](https://ui.shadcn.com) (Radix Primitives).
@@ -14,7 +14,7 @@ A production-ready, scalable video sharing platform built with **Next.js 15**. R
 -   **State Management**: React Query (Server state), Zustand (Client state).
 -   **Testing**: Jest (Unit), Playwright (E2E).
 
-## ✨ Features
+## Features
 
 -   **Video Management**:
     -   Drag & Drop Uploads directly to Cloudinary.
@@ -25,18 +25,21 @@ A production-ready, scalable video sharing platform built with **Next.js 15**. R
     -   **Search**: Full-text search for videos and users.
     -   **Infinite Scroll**: Performant feed with virtualization.
 -   **Social Interactions**:
+    -   **Subscriptions**: Follow creators and see their latest videos in your **Subscriptions Feed**.
     -   **Comments**: Nested replies and **@mentions** support.
     -   **Likes**: Optimistic UI updates for instant feedback.
-    -   **Notifications**: Real-time alerts for mentions, likes, and follows.
--   **Playlists**:
-    -   Create and manage custom playlists.
+    -   **Notifications**: Real-time alerts for mentions, likes, and new followers.
+-   **Playlists & History**:
+    -   **Watch History**: AUTOMATICALLY logs your views. Resumable playback (future). Auto-prunes history older than 30 days.
+    -   **Playlists**: Create and manage custom playlists.
     -   **"Liked Videos"**: Auto-generated playlist of your liked content.
 -   **UI/UX**:
+    -   **Modern Polish**: Animated interactions (e.g., Sign-in button, Like button).
     -   Dark/Light mode.
     -   Skeleton loaders and empty states.
     -   Responsive sidebar with collapsible menus.
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -91,10 +94,10 @@ A production-ready, scalable video sharing platform built with **Next.js 15**. R
     ```
     Open [http://localhost:3000](http://localhost:3000).
 
-## 🧪 Testing
+## Testing
 
 ### Unit Tests (Jest)
-Runs tests for utility functions and isolated components.
+Runs tests for utility functions and isolated components (e.g., `SubscribeButton`).
 ```bash
 npm test
 ```
@@ -105,7 +108,7 @@ Runs comprehensive browser automation tests for critical flows (Navigation, Sear
 npx playwright test
 ```
 
-## 📂 Project Structure
+## Project Structure
 
 -   `src/app`: Next.js App Router pages and layouts.
 -   `src/components`: Reusable UI components.
@@ -115,7 +118,7 @@ npx playwright test
 -   `e2e`: Playwright test specifications.
 -   `__tests__`: Jest unit tests.
 
-## 🚀 Deployment
+## Deployment
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new).
 
@@ -129,6 +132,6 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
     -   *Note: Ensure `DATABASE_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and all Cloudinary keys are set.*
 4.  **Deploy**: Click "Deploy". Vercel will automatically build and deploy your site on every push to the `main` branch.
 
-## 📄 License
+## License
 
 MIT

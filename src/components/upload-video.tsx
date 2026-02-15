@@ -11,7 +11,7 @@ interface UploadVideoProps {
 export default function UploadVideo({ onUploadSuccess }: UploadVideoProps) {
   return (
     <CldUploadButton
-      uploadPreset="extreme_v2"
+      uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "extreme_v2"}
       options={{
         resourceType: "video",
         clientAllowedFormats: ["mp4", "webm", "mov"],
