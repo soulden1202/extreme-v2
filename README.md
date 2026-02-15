@@ -3,6 +3,10 @@
 
 A production-ready, scalable video sharing platform built with **Next.js 15**. Re-engineered for performance, user experience, and developer productivity.
 
+## Sample Website
+
+https://extreme-v2.vercel.app/
+
 ## Tech Stack
 
 -   **Frontend**: [Next.js 15](https://nextjs.org) (App Router, Server Components), [TypeScript](https://www.typescriptlang.org), [Tailwind CSS](https://tailwindcss.com).
